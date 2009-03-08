@@ -10,11 +10,16 @@ var playdar = new Playdar({
     },
     soundmanager_ready: function () {
         parseHash();
+
     }
 });
 soundManager.url = '/static/deps/soundmanager2_flash9.swf';
 soundManager.flashVersion = 9;
-playdar.register_soundmanager(soundManager);
+soundManager.onload = function() {
+    playdar.init();
+    playdar.soundmanager = soundManager;
+}
+//playdar.register_soundmanager(soundManager);
 
 var Spiffdar = Class.create({
     tracks: $H({}),
@@ -140,7 +145,7 @@ var SpiffdarTrack = Class.create({
         this.tr.down('.artist').update(result.artist);
         this.tr.down('.track').update(result.track);
         this.sid = result.sid;
-        var sound = this.playdar.register_stream(this.sid, {
+        var sound = this.playdar.register_stream(result, {
             onfinish: function () {
                 this.notification_paused();//todo: stopped
                 //this.spiffdar.play_next(this);
@@ -172,6 +177,5 @@ var SpiffdarTrack = Class.create({
 
 
 document.observe('dom:loaded', function() {
-    playdar.init();
     spiffdar = new Spiffdar(playdar);
 });
