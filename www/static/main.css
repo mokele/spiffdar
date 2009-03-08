@@ -1,0 +1,95 @@
+body {
+    font-family: Helvetica;
+    font-size: 14px;
+    padding-bottom: 40px;
+}
+table {
+    
+}
+h1 {
+    margin: 0;
+    display: inline;
+}
+.spiffdar {
+    font-weight: bold;
+}
+.spiffdar span.spiff {
+    font-weight: normal;
+}
+div#playdar_stat {
+    display: inline;
+}
+form#add {
+    margin: 0 0 10px 0;
+}
+form#add label,
+form#spiffform label {
+    position: absolute;
+    font-size: 11px;
+    color: #777;
+}
+form#add input#artist,
+form#add input#track,
+form#spiffform input#spiff {
+    margin-top: 12px;
+}
+table#container tr td {
+    vertical-align: top;
+}
+table#container tr td#side {
+    width: 150px;
+    padding: 5px 0 0 0;
+}
+
+ul#lists {
+    list-style:none;
+    margin:0 0 5px 0;
+    padding:0;
+}
+ul#lists li {
+    margin:0;
+    padding:0;
+}
+form#spiffform {
+    margin-top: -15px;
+    position: absolute;
+    background: white;
+    border: 1px solid #c0c0c0;
+    padding: 10px;
+    z-index: 1;
+}
+form#spiffform input#spiff {
+    width: 250px;
+}
+
+table#list {
+    width: 500px;
+    border-collapse: collapse;
+}
+table#list tr.resolved {
+    color: green;
+    cursor: pointer;
+}
+table#list tr th {
+    text-align: left;
+    font-size: 12px;
+    padding: 3px 3px 1px 3px;
+}
+table#list tr#listitem_template {
+    display: none;
+}
+
+table#list tr.odd td {
+    background: #eee;
+}
+table#list tr.playing td {
+    background: #ffa;
+}
+table#list tr.paused td {
+    /*background: blue;*/
+}
+table#list tr td {
+    background: white;
+    padding: 3px 3px 1px 3px;
+    vertical-align: center;
+}
