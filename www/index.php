@@ -11,15 +11,14 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Spiffdar | Playlists for Playdar</title>
-<!-- include prototype from where you have it available -->
 <script type="text/javascript" src="/static/deps/prototype.js"></script>
 <script type="text/javascript" src="/static/deps/playdar.js"></script>
 <script type="text/javascript" src="/static/deps/soundmanager2-nodebug-jsmin.js"></script>
 <script type="text/javascript" src="/static/spiffdar.js"></script>
 <link rel="stylesheet" href="/static/main.css" type="text/css" />
 <script type="text/javascript">
-
-<?php ///////////////////////////
+<?php
+//////////////////////////////////
 // super simple for now
 if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
 {
@@ -40,7 +39,8 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
     echo "\n";
   }
 }
-///////////////////////////////// ?>
+/////////////////////////////////
+?>
 </script>
 </head>
 <body>
@@ -60,9 +60,9 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
   <tr>
     <td id="side">
       <ul id="lists">
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Playlist #1</span></a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2808884&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 24th 2008</span></a></li>
-        <li class="selected"><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2813494&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 25th 2008</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Playlist #1</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2808884&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 24th 2008</span></a></li>
+        <li class="selected"><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2813494&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 25th 2008</span></a></li>
         
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/post-rock/toptracks.xspf'); ?>"><span>AS - Post-rock</span></a></li>
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/pop/toptracks.xspf'); ?>"><span>AS - Pop</span></a></li>
@@ -117,7 +117,8 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
       </table-->
     </td>
   </tr>
-</table>
+</table>  
+<br style="clear: both;" />
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

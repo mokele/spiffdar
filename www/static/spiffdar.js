@@ -25,7 +25,6 @@ var Spiffdar = Class.create({
     delayed_loading: [],
     initialize: function(playdar) {
         document.observe('dom:loaded', function() {
-            this.loaded = true;
             this.list = $('list');
             this.addform = $('add');
             this.playdar = playdar;
@@ -34,6 +33,7 @@ var Spiffdar = Class.create({
                 this.results_handler.bind(this)
             );
             this.playdar.register_handler('stat_complete', function() {
+                this.loaded = true;
                 this.delayed_loading.each(function(func) {
                     func();
                 });
@@ -102,6 +102,10 @@ var Spiffdar = Class.create({
     playing_sid: null,
     playing_qid: null,
     play: function(track) {
+        if(!track) {
+            track = this.tracks.get(this.tracks.keys().pop());
+            if(!track) return
+        }
         if(!track.isResolved) {
             var keys = this.tracks.keys();
             var index = keys.indexOf(track.qid) + 1;
