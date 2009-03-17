@@ -1,17 +1,4 @@
-var playdar = new Playdar({
-    stat_complete: function (detected) {
-        var text;
-        if (detected) {
-            text = "<b style='color:green;'>Playdar ready</b>";
-        } else {
-            text = "<b style='color:red;'>Playdar unavailable</b><br/>You need Playdar, the music content resolver, installed and running. See <a href=\"http://www.playdar.org/\">www.playdar.org</a>.";
-        }
-        $('playdar_stat').innerHTML = text;
-    },
-    soundmanager_ready: function () {
-        parseHash();
-    }
-});
+var playdar = new Playdar();
 soundManager.url = '/static/deps/soundmanager2_flash9.swf';
 soundManager.flashVersion = 9;
 soundManager.onload = function() {
@@ -32,7 +19,14 @@ var Spiffdar = Class.create({
             this.playdar.register_results_handler(
                 this.results_handler.bind(this)
             );
-            this.playdar.register_handler('stat_complete', function() {
+            this.playdar.register_handler('stat_complete', function(detected) {
+                var text;
+                if (detected) {
+                    text = "<b style='color:green;'>Playdar ready</b>";
+                } else {
+                    text = "<b style='color:red;'>Playdar unavailable</b><br/>You need Playdar, the music content resolver, installed and running. See <a href=\"http://www.playdar.org/\">www.playdar.org</a>.";
+                }
+                $('playdar_stat').innerHTML = text;
                 this.loaded = true;
                 this.delayed_loading.each(function(func) {
                     func();

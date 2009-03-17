@@ -2,7 +2,7 @@
 
 function escape($str)
 {
-  return htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
+  return addcslashes(htmlspecialchars($str, ENT_COMPAT, 'UTF-8'), "\n");
 }
 
 ?><!DOCTYPE html 
