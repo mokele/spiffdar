@@ -33,7 +33,7 @@ var Spiffdar = Class.create({
             this.playdar.register_results_handler(
                 this.results_handler.bind(this)
             );
-            this.playdar.register_handler('detected', function() {
+            this.playdar.register_handler('stat_complete', function() {
                 this.delayed_loading.each(function(func) {
                     func();
                 });
@@ -118,15 +118,10 @@ var Spiffdar = Class.create({
         
         this.playdar.play_stream(track.sid);
         if(this.playing_sid==track.sid) {
-            track.notification_paused();
             this.playing_sid = null;
             this.playing_qid = null;
         } else {
-            if(this.playing_sid) {
-                this.tracks.get(this.playing_qid).notification_paused();
-            }
             if(track.isResolved) {
-                track.notification_played();
                 this.playing_sid = track.sid;
                 this.playing_qid = track.qid;
             } else {
@@ -191,7 +186,10 @@ var SpiffdarTrack = Class.create({
                     var next = this.spiffdar.tracks.get(keys[index]);
                     this.spiffdar.play(next);
                 }
-            }.bind(this)
+            }.bind(this),
+            onpause: this.notification_paused.bind(this),
+            onplay: this.notification_played.bind(this),
+            onresume: this.notification_played.bind(this)
         });
     },
     click_callback: function(event) {
