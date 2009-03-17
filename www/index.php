@@ -19,24 +19,28 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 <link rel="stylesheet" href="/static/main.css" type="text/css" />
 <script type="text/javascript">
 
-Event.observe(window, 'load', function() {
-  <?php ///////////////////////////
-  // super simple for now
-  if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
+<?php ///////////////////////////
+// super simple for now
+if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
+{
+  $contents = file_get_contents($_GET['spiff']);
+  $xml = new SimpleXMLElement($contents);
+  $shifting = array();
+  $title = (string)$xml->title;
+  $annotation = (string)$xml->annotation;
+  echo 'spiffdar.setTitle("'.escape($title).'");';
+  echo "\n";
+  echo 'spiffdar.setAnnotation("'.escape($annotation).'");';
+  echo "\n";
+  foreach($xml->trackList->track as $trackNode)
   {
-    $contents = file_get_contents($_GET['spiff']);
-    $xml = new SimpleXMLElement($contents);
-
-    foreach($xml->trackList->track as $trackNode)
-    {
-      $artist = (string)$trackNode->creator;
-      $track = (string)$trackNode->title;
-      echo 'spiffdar.add_track("'.escape($artist).'", "'.escape($track).'");';
-      echo "\n";
-    }
+    $artist = (string)$trackNode->creator;
+    $track = (string)$trackNode->title;
+    echo 'spiffdar.add_track("'.escape($artist).'", "'.escape($track).'")';
+    echo "\n";
   }
-  ///////////////////////////////// ?>
-});
+}
+///////////////////////////////// ?>
 </script>
 </head>
 <body>
@@ -56,19 +60,19 @@ Event.observe(window, 'load', function() {
   <tr>
     <td id="side">
       <ul id="lists">
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>">Playlist #1</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2808884&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>">Radiohead - June 24th 2008</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2813494&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>">Radiohead - June 25th 2008</a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Playlist #1</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2808884&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 24th 2008</span></a></li>
+        <li class="selected"><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&raw=true&playlistURL=lastfm://playlist/2813494&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 25th 2008</span></a></li>
         
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/post-rock/toptracks.xspf'); ?>">AS - Post-rock</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/pop/toptracks.xspf'); ?>">AS - Pop</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/indie/toptracks.xspf'); ?>">AS - Indie</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/metal/toptracks.xspf'); ?>">AS - Metal</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/progressive/toptracks.xspf'); ?>">AS - Progressive</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/singer-songwriter/toptracks.xspf'); ?>">AS - Singer-songwriter</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/female-vocalists/toptracks.xspf'); ?>">AS - Female-vocalists</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/japanese/toptracks.xspf'); ?>">AS - Japanese</a></li>
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/detroit' . urlencode('%20') . 'techno/toptracks.xspf'); ?>">AS - Detroit Techno</a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/post-rock/toptracks.xspf'); ?>"><span>AS - Post-rock</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/pop/toptracks.xspf'); ?>"><span>AS - Pop</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/indie/toptracks.xspf'); ?>"><span>AS - Indie</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/metal/toptracks.xspf'); ?>"><span>AS - Metal</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/progressive/toptracks.xspf'); ?>"><span>AS - Progressive</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/singer-songwriter/toptracks.xspf'); ?>"><span>AS - Singer-songwriter</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/female-vocalists/toptracks.xspf'); ?>"><span>AS - Female-vocalists</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/japanese/toptracks.xspf'); ?>"><span>AS - Japanese</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/detroit' . urlencode('%20') . 'techno/toptracks.xspf'); ?>"><span>AS - Detroit Techno</span></a></li>
         
        
         
@@ -82,7 +86,22 @@ Event.observe(window, 'load', function() {
       </form>
     </td>
     <td id="main">
-      <table id="list">
+      <!--div id="list_metadata">
+        <h2 id="title" style="display:none;"></h2>
+        <p id="annotation" style="display:none;"></p>
+        <div id="loading_metadata">Loading...</div>
+      </div-->
+      <ol id="list">
+        <li id="listitem_template">
+          <div class="position"></div>
+          <div class="metadata">
+            <div class="time"></div>
+            <div class="track"></div>
+            <div class="artist"></div>
+          </div>
+        </li>
+      </ol>
+      <!--table id="list">
         <tr>
           <th>#</th>
           <th>Title</th>
@@ -95,7 +114,7 @@ Event.observe(window, 'load', function() {
           <td class="artist"></td>
           <td class="time"></td>
         </tr>
-      </table>
+      </table-->
     </td>
   </tr>
 </table>

@@ -10,7 +10,6 @@ var playdar = new Playdar({
     },
     soundmanager_ready: function () {
         parseHash();
-
     }
 });
 soundManager.url = '/static/deps/soundmanager2_flash9.swf';
@@ -19,21 +18,34 @@ soundManager.onload = function() {
     playdar.init();
     playdar.soundmanager = soundManager;
 }
-//playdar.register_soundmanager(soundManager);
 
 var Spiffdar = Class.create({
     tracks: $H({}),
+    loaded: false,
+    delayed_loading: [],
     initialize: function(playdar) {
-        this.list = $('list');
-        this.addform = $('add');
-        this.playdar = playdar;
-        this.addform.observe('submit', this.add_callback.bind(this));
-        this.playdar.register_results_handler(
-            this.results_handler.bind(this)
-        );
+        document.observe('dom:loaded', function() {
+            this.loaded = true;
+            this.list = $('list');
+            this.addform = $('add');
+            this.playdar = playdar;
+            this.addform.observe('submit', this.add_callback.bind(this));
+            this.playdar.register_results_handler(
+                this.results_handler.bind(this)
+            );
+            this.playdar.register_handler('detected', function() {
+                this.delayed_loading.each(function(func) {
+                    func();
+                });
+            }.bind(this));
+        }.bind(this));
     },
     results_handler: function(response, final_answer) {
         this.tracks.get(response.qid).results_handler(response, final_answer);
+    },
+    setTitle: function(title) {
+    },
+    setAnnotation: function(annotation) {
     },
     add_callback: function(event) {
         event.stop();
@@ -44,29 +56,48 @@ var Spiffdar = Class.create({
         $('artist').focus();
         this.add_track(artist, track);
     },
+    delay_loaded: function(func) {
+        if(this.loaded) {
+            func();
+        } else {
+            this.delayed_loading.push(func);
+        }
+    },
     add_track: function(artist, track) {
-        var qid = Playdar.generate_uuid();
-        var row = this.new_row(qid, artist, track);
-        var track = new SpiffdarTrack(qid, row, this);
-        this.tracks.set(qid, track);
-        track.resolve();
-        return track;
+        this.delay_loaded(function() {
+            var qid = Playdar.generate_uuid();
+            var row = this.new_row(qid, artist, track);
+            var spiffTrack = new SpiffdarTrack(qid, row, this);
+            this.tracks.set(qid, spiffTrack);
+            spiffTrack.resolve();
+            return spiffTrack;
+        }.bind(this));
     },
     new_row: function(qid, artist, track) {
         var row = $('listitem_template').cloneNode(true);
+        /*
         var tbody = this.list.down('tbody');
         if(!tbody) {
             tbody = this.list;
         }
         tbody.appendChild(row);
+        */
+        $('listitem_template').insert({before: row});
         row.id = 'qid_' + qid;
-        row.down('td.position').update(this.tracks.size()+1);
-        row.down('td.artist').update(artist);
-        row.down('td.track').update(track);
+        row.down('.position').update(1);
+        row.down('.artist').update(artist);
+        row.down('.track').update(track);
         if(this.tracks.size() % 2 == 0) {
             row.addClassName('odd');
         }
+        this.reindex();
         return row;
+    },
+    reindex: function() {
+        var i = 1;
+        this.list.select('li .position').each(function(pos) {
+            pos.update(i++);
+        });
     },
     playing_sid: null,
     playing_qid: null,
@@ -117,11 +148,11 @@ var Spiffdar = Class.create({
 var SpiffdarTrack = Class.create({
     playing: false,
     resolved: false,
-    initialize: function(qid, tr, spiffdar) {
-        this.tr = tr;
+    initialize: function(qid, element, spiffdar) {
+        this.element = element;
         this.qid = qid;
-        this.artist = this.tr.down('td.artist').innerHTML;
-        this.track = this.tr.down('td.track').innerHTML;
+        this.artist = this.element.down('.artist').innerHTML;
+        this.track = this.element.down('.track').innerHTML;
         this.spiffdar = spiffdar;
         //and for convenience
         this.playdar = spiffdar.playdar;
@@ -139,11 +170,13 @@ var SpiffdarTrack = Class.create({
     },
     resolved: function(result) {
         this.isResolved = true;
-        this.tr.addClassName('resolved');
-        this.tr.observe('click', this.click_callback.bind(this));
-        this.tr.down('.time').update(Playdar.mmss(result.duration));
-        this.tr.down('.artist').update(result.artist);
-        this.tr.down('.track').update(result.track);
+        this.element.addClassName('resolved');
+        this.element.observe('click', this.click_callback.bind(this));
+        this.element.observe('mouseover', this.mouseover_callback.bind(this));
+        this.element.observe('mouseout', this.mouseout_callback.bind(this));
+        this.element.down('.time').update(Playdar.mmss(result.duration));
+        this.element.down('.artist').update(result.artist);
+        this.element.down('.track').update(result.track);
         this.sid = result.sid;
         var sound = this.playdar.register_stream(result, {
             onfinish: function () {
@@ -165,17 +198,23 @@ var SpiffdarTrack = Class.create({
         event.stop();
         this.spiffdar.play(this);
     },
+    mouseover_callback: function(event) {
+        event.stop();
+        this.element.addClassName('hover');
+    },
+    mouseout_callback: function(event) {
+        event.stop();
+        this.element.removeClassName('hover');
+    },
     notification_paused: function() {
-        this.tr.removeClassName('playing');
-        this.tr.addClassName('paused');
+        this.element.removeClassName('playing');
+        this.element.addClassName('paused');
     },
     notification_played: function() {
-        this.tr.removeClassName('paused');
-        this.tr.addClassName('playing');
+        this.element.removeClassName('paused');
+        this.element.addClassName('playing');
     }
 });
 
-
-document.observe('dom:loaded', function() {
-    spiffdar = new Spiffdar(playdar);
-});
+spiffdar = new Spiffdar(playdar);
+    

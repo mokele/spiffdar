@@ -33,12 +33,24 @@ form#add input#track,
 form#spiffform input#spiff {
     margin-top: 12px;
 }
-table#container tr td {
-    vertical-align: top;
+table#container {
+    width: 100%;
+    height: 300px;
+    float: left;
 }
+
 table#container tr td#side {
-    width: 150px;
+    vertical-align: top;
+    width: 200px;
     padding: 5px 0 0 0;
+    overflow: auto;
+}
+table#container tr td#main {
+    vertical-align: top;
+    width: 100%;
+    height: 100%;
+    float: left;
+    overflow: auto;
 }
 
 ul#lists {
@@ -47,9 +59,35 @@ ul#lists {
     padding:0;
 }
 ul#lists li {
-    margin:0;
-    padding:0;
+    margin:0 0 2px 0;
+    padding: 0;
 }
+ul#lists li a {
+    display: block;
+    color: #444;
+    text-decoration: none;
+    background: #ddd;
+    -moz-border-radius: 5px;
+    font-size: 12px;
+    line-height: 12px;
+    padding:2px 4px;
+}
+ul#lists li a span {
+    height: 12px;
+    vertical-align: middle;
+    display: block;
+    overflow: hidden;
+}
+ul#lists li a:hover {
+    background: #bbb;
+}
+ul#lists li.selected a {
+    background: green;
+    color: white;
+    -moz-border-radius: 0;
+}
+
+
 form#spiffform {
     margin-top: -15px;
     position: absolute;
@@ -60,6 +98,63 @@ form#spiffform {
 }
 form#spiffform input#spiff {
     width: 250px;
+}
+/** LIST **/
+ol#list {
+    list-style: none;
+    padding:0;
+    margin:0;
+    display: block;
+}
+ol#list li#listitem_template {
+    display: none;
+    visibility: hidden;
+}
+ol#list li {
+    padding:0;
+    margin:0;
+}
+ol#list li.resolved {
+    color: green;
+    cursor: pointer;
+}
+ol#list li {
+    clear: both;
+    display: block;
+}
+ol#list li.odd {
+    background: #eee;
+}
+ol#list li.hover {
+    background: #ccc;
+}
+ol#list li.playing {
+    background: green;
+    color: white;
+}
+ol#list li.paused {
+    /*background: blue;*/
+}
+ol#list li .position {
+    float: left;
+    font-size: 20px;
+    padding: 5px;
+}
+ol#list li .metadata {
+    /*float: left;*/
+    padding: 5px;
+}
+ol#list li .track {
+    font-size: 20px;
+    display: inline;
+    margin-left: 10px;
+}
+ol#list li .artist {
+    display: inline;
+}
+ol#list li .time {
+    float: right;
+    font-size: 20px;
 }
 
 table#list {
