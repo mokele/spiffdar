@@ -56,7 +56,7 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
   <input type="submit" value="Add" />
 </form>
 
-<table id="container">
+<table id="container" width="100%" height="100%">
   <tr>
     <td id="side">
       <ul id="lists">
@@ -85,13 +85,7 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
         <a href="#" onclick="$('spiffform').toggle();this.blur();return false;">cancel</a>
       </form>
     </td>
-    <td id="main">
-      <!--div id="list_metadata">
-        <h2 id="title" style="display:none;"></h2>
-        <p id="annotation" style="display:none;"></p>
-        <div id="loading_metadata">Loading...</div>
-      </div-->
-      <ol id="list">
+    <td id="main"><ol id="list">
         <li id="listitem_template">
           <div class="position"></div>
           <div class="metadata">
@@ -100,25 +94,9 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
             <div class="artist"></div>
           </div>
         </li>
-      </ol>
-      <!--table id="list">
-        <tr>
-          <th>#</th>
-          <th>Title</th>
-          <th>Artist</th>
-          <th>Time</th>
-        </tr>
-        <tr id="listitem_template">
-          <td class="position"></td>
-          <td class="track"></td>
-          <td class="artist"></td>
-          <td class="time"></td>
-        </tr>
-      </table-->
-    </td>
+      </ol></td>
   </tr>
-</table>  
-<br style="clear: both;" />
+</table>
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

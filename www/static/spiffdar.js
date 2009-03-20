@@ -10,6 +10,8 @@ var Spiffdar = Class.create({
     tracks: $H({}),
     loaded: false,
     delayed_loading: [],
+    playing_sid: null,
+    playing_qid: null,
     initialize: function(playdar) {
         document.observe('dom:loaded', function() {
             this.list = $('list');
@@ -57,6 +59,14 @@ var Spiffdar = Class.create({
             this.delayed_loading.push(func);
         }
     },
+    get_track: function(qid) {
+        if(qid.indexOf('qid_')==0) {
+            //also allow the id of the element
+            //as well as just the qid itself
+            qid = qid.substr(4);
+        }
+        return this.tracks.get(qid);
+    },
     add_track: function(artist, track) {
         this.delay_loaded(function() {
             var qid = Playdar.generate_uuid();
@@ -76,7 +86,7 @@ var Spiffdar = Class.create({
         }
         tbody.appendChild(row);
         */
-        $('listitem_template').insert({before: row});
+        this.list.insert({bottom: row});
         row.id = 'qid_' + qid;
         row.down('.position').update(1);
         row.down('.artist').update(artist);
@@ -90,24 +100,22 @@ var Spiffdar = Class.create({
     reindex: function() {
         var i = 1;
         this.list.select('li .position').each(function(pos) {
-            pos.update(i++);
+            if(pos.up('li').id!="listitem_template") {
+                pos.update(i++);
+            }
         });
     },
-    playing_sid: null,
-    playing_qid: null,
     play: function(track) {
         if(!track) {
             track = this.tracks.get(this.tracks.keys().pop());
             if(!track) return
         }
         if(!track.isResolved) {
-            var keys = this.tracks.keys();
-            var index = keys.indexOf(track.qid) + 1;
-            if(keys[index]) {
-                var next = this.tracks.get(keys[index]);
-                this.play(next);
-                return;
-            }
+            var nextElement = track.element.next();
+            if(!nextElement) return;//end of list
+            var next = this.get_track(nextElement.id);
+            this.play(next);
+            return;
         }
         
         if(track.sid != this.playing_sid && this.playing_sid) {
@@ -178,12 +186,11 @@ var SpiffdarTrack = Class.create({
                 //todo: move into Spiffdar
                 this.spiffdar.playing_qid = null;
                 this.spiffdar.playing_sid = null;
-                var keys = this.spiffdar.tracks.keys();
-                var index = keys.indexOf(this.qid) + 1;
-                if(keys[index]) {
-                    var next = this.spiffdar.tracks.get(keys[index]);
-                    this.spiffdar.play(next);
-                }
+                
+                var nextElement = this.element.next();
+                if(!nextElement) return;//end of list
+                var next = this.spiffdar.get_track(nextElement.id);
+                this.spiffdar.play(next);
             }.bind(this),
             onpause: this.notification_paused.bind(this),
             onplay: this.notification_played.bind(this),
