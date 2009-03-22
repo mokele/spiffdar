@@ -1,11 +1,15 @@
-var playdar = new Playdar();
+var auth_details = {
+    name: "Spiffdar | Playlists for Playdar",
+    website: "http://spiffdar.org/",
+    receiverurl: "http://spiffdar.org/playdarauth.html",
+};
+var playdar = new Playdar(auth_details);
 soundManager.url = '/static/deps/soundmanager2_flash9.swf';
 soundManager.flashVersion = 9;
 soundManager.onload = function() {
-    playdar.init();
     playdar.soundmanager = soundManager;
+    playdar.init();
 }
-
 var Spiffdar = Class.create({
     tracks: $H({}),
     loaded: false,
@@ -21,8 +25,9 @@ var Spiffdar = Class.create({
             this.playdar.register_results_handler(
                 this.results_handler.bind(this)
             );
-            this.playdar.register_handler('stat_complete', function(detected) {
+            this.playdar.register_handler('stat', function(detected) {
                 var text;
+                console.log($$('body').first().select('div').last().previous('div'));
                 if (detected) {
                     text = "<b style='color:green;'>Playdar ready</b>";
                 } else {
