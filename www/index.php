@@ -111,7 +111,7 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
         <div id="loading">Loading Spiff...</div>
       <?php } else { ?>
       <div id="emptylist">
-        <p>Enter artists and track names above to add them to a new list here or enter a URL to a hosted XSPF to view it in Spiffdar.</p>
+        <p>Enter artist and track names above to add them to a new list in this area, or enter a URL to a hosted XSPF to view it in Spiffdar.</p>
         
         <form>
           <label for="spiff_main">Enter an XSPF URL</label>
