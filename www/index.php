@@ -52,7 +52,7 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
 </head>
 <body>
 
-<h1 class="spiffdar"><span class="spiff">Spiff</span>dar<!--där--></h1>
+<h1><a href="/" class="spiffdar"><span class="spiff">Spiff</span>dar<!--där--></a></h1>
 <div id="playdar_stat">Detecting Playdar</div>
 
 <form id="add">
