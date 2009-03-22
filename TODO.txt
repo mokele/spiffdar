@@ -1,0 +1,6 @@
+* List persistence
+* User persistence
+* OpenID login
+* Create anonymous sessions when a list is saved.  It'd be great if someone could use Spiffdar without having to login at all unless they want to use it via different machines/browsers.  An anonymous session cookie can be used until the point at which someone wishes to login with an OpenID.  Even picking of a username can be done without any need for authentication.  Clear notification of this state should be visible at all times.  Maybe use recaptcha when setting a username if not authenticated? otherwise someone could bot registration of lots of usernames.
+* Display each resolution's source
+* Handle multiple results for per track and let the viewer change which one to use.
