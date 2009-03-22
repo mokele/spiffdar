@@ -5,6 +5,11 @@ function escape($str)
   return addcslashes(htmlspecialchars($str, ENT_COMPAT, 'UTF-8'), "\n");
 }
 
+$port = $_SERVER['SERVER_PORT'];
+$host = $_SERVER['HTTP_HOST'];
+$site = 'http://' . $host . ($port==80?'':":$port") . '/';
+
+
 ?><!DOCTYPE html 
 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -60,9 +65,12 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
   <tr>
     <td id="side">
       <ul id="lists">
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Playlist #1</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Test Playlist</span></a></li>
+        <?php /*><li><a href="?spiff=<?php echo urlencode($site . 'static/the-way-I-do.xspf'); ?>">Embrace - The Way I Do</a></li>
+        <li><a href="?spiff=<?php echo urlencode($site . 'static/hey-everyone.xspf'); ?>">Dananananaykroyd - Hey Everyone!</a></li>
+        */ ?>
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2808884&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 24th 2008</span></a></li>
-        <li class="selected"><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2813494&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 25th 2008</span></a></li>
+        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2813494&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Radiohead - June 25th 2008</span></a></li>
         
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/post-rock/toptracks.xspf'); ?>"><span>AS - Post-rock</span></a></li>
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/pop/toptracks.xspf'); ?>"><span>AS - Pop</span></a></li>
@@ -77,11 +85,13 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
        
         
       </ul>
-      <a href="#" onclick="$('spiffform').toggle();$('spiff').focus();return false;">add XSPF</a>
+      <a href="/">new</a>
+      |
+      <a href="#" onclick="$('spiffform').toggle();$('spiff').focus();return false;">view XSPF</a>
       <form id="spiffform" style="display:none;">
         <label for="spiff">Enter an XSPF URL</label>
         <input type="text" name="spiff" id="spiff" value="http://" />
-        <input type="submit" value="Add" id="addspiff" />
+        <input type="submit" value="View" id="addspiff" />
         <a href="#" onclick="$('spiffform').toggle();this.blur();return false;">cancel</a>
       </form>
     </td>
@@ -94,7 +104,16 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
             <div class="artist"></div>
           </div>
         </li>
-      </ol></td>
+      </ol>
+      <div id="emptylist">
+        <p>Enter artists and track names above to add them to a new list here or enter a URL to a hosted XSPF to view it in Spiffdar.</p>
+        
+        <form>
+          <label for="spiff_main">Enter an XSPF URL</label>
+          <input type="text" name="spiff" id="spiff_main" value="http://" />
+          <input type="submit" value="View" id="addspiff_main" />
+        </form>
+      </div></td>
   </tr>
 </table>
 
