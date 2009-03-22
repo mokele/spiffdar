@@ -143,8 +143,8 @@ ol#list li .position {
     padding: 5px;
 }
 ol#list li .metadata {
-    /*float: left;*/
     padding: 5px;
+    margin: 0 0 0 20px;
 }
 ol#list li .track {
     font-size: 20px;

@@ -25,8 +25,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 <?php
 //////////////////////////////////
 // super simple for now
+$spiff = false;
 if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
 {
+  $spiff = true;
   $contents = file_get_contents($_GET['spiff']);
   $xml = new SimpleXMLElement($contents);
   $shifting = array();
@@ -105,6 +107,9 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
           </div>
         </li>
       </ol>
+      <?php if($spiff) { ?>
+        <div id="loading">Loading Spiff...</div>
+      <?php } else { ?>
       <div id="emptylist">
         <p>Enter artists and track names above to add them to a new list here or enter a URL to a hosted XSPF to view it in Spiffdar.</p>
         
@@ -113,7 +118,7 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
           <input type="text" name="spiff" id="spiff_main" value="http://" />
           <input type="submit" value="View" id="addspiff_main" />
         </form>
-      </div></td>
+      </div><?php } ?></td>
   </tr>
 </table>
 

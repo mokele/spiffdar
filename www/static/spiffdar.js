@@ -69,7 +69,12 @@ var Spiffdar = Class.create({
     },
     add_track: function(artist, track) {
         this.delay_loaded(function() {
-            $('emptylist').hide();
+            if($('emptylist')) {
+                $('emptylist').hide();
+            }
+            if($('loading')) {
+                $('loading').hide();
+            }
             var qid = Playdar.generate_uuid();
             var row = this.new_row(qid, artist, track);
             var spiffTrack = new SpiffdarTrack(qid, row, this);
