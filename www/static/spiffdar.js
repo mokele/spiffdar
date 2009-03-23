@@ -1,6 +1,6 @@
 var auth_details = {
     name: "Spiffdar | Playlists for Playdar",
-    website: "http://local.spiffdar.org/",
+    website: "http://spiffdar.org/",
     receiverurl: "http://spiffdar.org/playdarauth.html",
 };
 var playdar = new Playdar(auth_details);
