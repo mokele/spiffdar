@@ -116,17 +116,18 @@ div#emptylist p {
 }
 /** LIST **/
 ol#list {
-    list-style: none;
     padding:0;
     margin:0;
     display: block;
+    list-style-position: inside;
+    font-size: 20px;
 }
 ol#list li#listitem_template {
     display: none;
     visibility: hidden;
 }
 ol#list li {
-    padding:0;
+    padding:5px;
     margin:0;
     clear: both;
 }
@@ -147,15 +148,6 @@ ol#list li.playing {
 ol#list li.paused {
     /*background: blue;*/
 }
-ol#list li .position {
-    float: left;
-    font-size: 20px;
-    padding: 5px;
-}
-ol#list li .metadata {
-    padding: 5px;
-    margin: 0 0 0 20px;
-}
 ol#list li .track {
     font-size: 20px;
     display: inline;
@@ -164,10 +156,12 @@ ol#list li .track {
 ol#list li .artist {
     display: inline;
     margin-left: 3px;
+    font-size: 14px;
 }
 ol#list li .time {
     float: right;
     font-size: 20px;
+    margin-top: -20px;
 }
 
 table#list {

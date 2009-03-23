@@ -99,12 +99,9 @@ if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
     </td>
     <td id="main"><ol id="list">
         <li id="listitem_template">
-          <div class="position"></div>
-          <div class="metadata">
-            <div class="time"></div>
-            <div class="track"></div>
-            <div class="artist"></div>
-          </div>
+          <div class="time"></div>
+          <div class="track"></div>
+          <div class="artist"></div>
         </li>
       </ol>
       <?php if($spiff) { ?>

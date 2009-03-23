@@ -1,6 +1,6 @@
 var auth_details = {
     name: "Spiffdar | Playlists for Playdar",
-    website: "http://spiffdar.org/",
+    website: "http://local.spiffdar.org/",
     receiverurl: "http://spiffdar.org/playdarauth.html",
 };
 var playdar = new Playdar(auth_details);
@@ -27,7 +27,6 @@ var Spiffdar = Class.create({
             );
             this.playdar.register_handler('stat', function(detected) {
                 var text;
-                console.log($$('body').first().select('div').last().previous('div'));
                 if (detected) {
                     text = "<b style='color:green;'>Playdar ready</b>";
                 } else {
@@ -84,9 +83,37 @@ var Spiffdar = Class.create({
             var row = this.new_row(qid, artist, track);
             var spiffTrack = new SpiffdarTrack(qid, row, this);
             this.tracks.set(qid, spiffTrack);
-            spiffTrack.resolve();
+            this.resolve(spiffTrack);
             return spiffTrack;
         }.bind(this));
+    },
+    /**
+     * resolved based on a fifo queue
+     */
+    resolution_queue: $A([]),
+    processing_resolution_queue: 0,
+    resolution_queue_size: 100,
+    resolve: function(spiffTrack) {
+        this.resolution_queue.push(spiffTrack);
+        this.ping_resolution_queue();
+    },
+    ping_resolution_queue: function() {
+        if(this.processing_resolution_queue < this.resolution_queue_size) {
+            var upto = this.resolution_queue_size
+                      -this.processing_resolution_queue;
+            for(var i=1; i<=upto; i++) {
+                var spiffTrack = this.resolution_queue.shift();
+                if(!spiffTrack) {
+                    break;
+                }
+                this.processing_resolution_queue++;
+                spiffTrack.resolve(this.track_resolution_done.bind(this));
+            }
+        }
+    },
+    track_resolution_done: function() {
+        this.processing_resolution_queue--;
+        this.ping_resolution_queue();
     },
     new_row: function(qid, artist, track) {
         var row = $('listitem_template').cloneNode(true);
@@ -99,22 +126,12 @@ var Spiffdar = Class.create({
         */
         this.list.insert({bottom: row});
         row.id = 'qid_' + qid;
-        row.down('.position').update(1);
         row.down('.artist').update(artist);
         row.down('.track').update(track);
         if(this.tracks.size() % 2 == 0) {
             row.addClassName('odd');
         }
-        this.reindex();
         return row;
-    },
-    reindex: function() {
-        var i = 1;
-        this.list.select('li .position').each(function(pos) {
-            if(pos.up('li').id!="listitem_template") {
-                pos.update(i++);
-            }
-        });
     },
     play: function(track) {
         if(!track) {
@@ -160,6 +177,7 @@ var Spiffdar = Class.create({
 var SpiffdarTrack = Class.create({
     playing: false,
     resolved: false,
+    resolved_callback: null,
     initialize: function(qid, element, spiffdar) {
         this.element = element;
         this.qid = qid;
@@ -169,7 +187,8 @@ var SpiffdarTrack = Class.create({
         //and for convenience
         this.playdar = spiffdar.playdar;
     },
-    resolve: function() {
+    resolve: function(callback) {
+        this.resolved_callback = callback;
         this.spiffdar.playdar.resolve(this.artist, '', this.track, this.qid);
     },
     results_handler: function(response, final_answer) {
@@ -177,7 +196,14 @@ var SpiffdarTrack = Class.create({
             var first = response.results.first();
             if(first) {
                 this.resolved(first);
+            } else {
+                this.not_resolved();
             }
+        }
+    },
+    not_resolved: function() {
+        if(this.resolved_callback) {
+            this.resolved_callback();
         }
     },
     resolved: function(result) {
@@ -206,7 +232,10 @@ var SpiffdarTrack = Class.create({
             onpause: this.notification_paused.bind(this),
             onplay: this.notification_played.bind(this),
             onresume: this.notification_played.bind(this)
-        });
+        });        
+        if(this.resolved_callback) {
+            this.resolved_callback();
+        }
     },
     click_callback: function(event) {
         event.stop();
