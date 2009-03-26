@@ -13,3 +13,5 @@ http://spiffdar.org/
   - soundmanager2-nodebug-jsmin.js
   - soundmanager2_flash9.swf
       http://www.schillmania.com/projects/soundmanager2/doc/download/
+* mkdir etc and put a file private_key.php in it that defines the global
+  $private_key that you need to generate. Just create a long enough random string.
