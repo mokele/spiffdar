@@ -5,4 +5,11 @@
 * Display each resolution's source
 * Handle multiple results for per track and let the viewer change which one to use.
 * Remote player controls via iPhone or other machine.
-* 
+
+== Ideas via IRC and other places ==
+
+* RJ2: mokele: i was thinking that i want to be able to click a link on a lastfm album page and end up on spiffdar with the album tracklist loaded in
+[16:51] RJ2: or maybe click the link for a track chart somewhere on lastfm and toss it all into spiffdar
+[16:51] RJ2: could you accept POST data with a tracklist in and autocreate a list?
+[16:52] RJ2: something simple for now like  artist<Tab>album<Tab>track<Tab><newline>...
+[16:53] RJ2: i'm not quite ready to wield JSPF yet
