@@ -8,17 +8,9 @@ require_once 'Spiff.php';
 require_once 'Identity.php';
 require_once 'Session.php';
 
-$dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
+require_once '../etc/private_key.php';
 
 $session = new Session();
-$identity = new Identity(1);
-$session->save($identity);
-
-$spiff = new Spiff();
-$spiff->save($session);
-
-
-
 
 function escape($str)
 {
@@ -46,25 +38,36 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 //////////////////////////////////
 // super simple for now
 $spiff = false;
-if(isset($_GET['spiff']) && preg_match('/^http/', $_GET['spiff']))
+if(isset($_GET['spiff']))
 {
-  $spiff = true;
-  $contents = file_get_contents($_GET['spiff']);
-  $xml = new SimpleXMLElement($contents);
-  $shifting = array();
-  $title = (string)$xml->title;
-  $annotation = (string)$xml->annotation;
-  echo 'spiffdar.setTitle("'.escape($title).'");';
-  echo "\n";
-  echo 'spiffdar.setAnnotation("'.escape($annotation).'");';
-  echo "\n";
-  foreach($xml->trackList->track as $trackNode)
-  {
-    $artist = (string)$trackNode->creator;
-    $track = (string)$trackNode->title;
-    echo 'spiffdar.add_track("'.escape($artist).'", "'.escape($track).'")';
-    echo "\n";
-  }
+    $dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
+
+    $spiff = new Spiff();
+    $loaded = false;
+    if(is_numeric($_GET['spiff']))
+    {
+        $spiff->load($_GET['spiff']);
+        $loaded = true;
+    }
+    elseif(preg_match('/^http/', $_GET['spiff']))
+    {
+        $spiff->loadFromURL($_GET['spiff'], $session);
+        $loaded = true;
+    }
+    if($loaded)
+    {
+        $title = $spiff->title;
+        $annotation = $spiff->annotation;
+        echo 'spiffdar.setTitle("'.escape($title).'");';
+        echo "\n";
+        echo 'spiffdar.setAnnotation("'.escape($annotation).'");';
+        echo "\n";
+        foreach($spiff->trackList as $track)
+        {
+            echo 'spiffdar.add_track("'.escape($track['creator']).'", "'.escape($track['track']).'")';
+            echo "\n";
+        }
+    }
 }
 /////////////////////////////////
 ?>
