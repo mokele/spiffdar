@@ -215,6 +215,7 @@ var SpiffdarTrack = Class.create({
         this.element.down('.time').update(Playdar.mmss(result.duration));
         this.element.down('.artist').update(result.artist);
         this.element.down('.track').update(result.track);
+        this.element.setAttribute('title', 'source: ' + result['source']);
         this.sid = result.sid;
         var sound = this.playdar.register_stream(result, {
             onfinish: function () {

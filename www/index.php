@@ -98,6 +98,7 @@ if(isset($_GET['spiff']))
 <table id="container" width="100%" height="100%">
   <tr>
     <td id="side">
+      
       <ul id="lists">
         <?php foreach($spiffList->spiffs as $spiff) { ?>
             <li<?php if($_spiff && $_spiff->id==$spiff->id) { ?> class="selected"<?php } ?>><a href="<?php echo $spiff->getURL(); ?>" title="<?php echo escape($spiff->title); ?><?php if($spiff->annotation) echo ' | '; ?><?php echo escape($spiff->annotation, false); ?>"><span><?php echo escape($spiff->title); ?></span></a></li>
@@ -118,19 +119,7 @@ if(isset($_GET['spiff']))
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/female-vocalists/toptracks.xspf'); ?>"><span>AS - Female-vocalists</span></a></li>
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/japanese/toptracks.xspf'); ?>"><span>AS - Japanese</span></a></li>
         <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/1.0/tag/detroit' . urlencode('%20') . 'techno/toptracks.xspf'); ?>"><span>AS - Detroit Techno</span></a></li>
-        
-       
-        
       </ul>
-      <a href="/">new</a>
-      |
-      <a href="#" onclick="$('spiffform').toggle();$('spiff').focus();return false;">view XSPF</a>
-      <form id="spiffform" style="display:none;">
-        <label for="spiff">Enter an XSPF URL</label>
-        <input type="text" name="spiff" id="spiff" value="http://" />
-        <input type="submit" value="View" id="addspiff" />
-        <a href="#" onclick="$('spiffform').toggle();this.blur();return false;">cancel</a>
-      </form>
     </td>
     <td id="main"><ol id="list">
         <li id="listitem_template">
@@ -139,7 +128,7 @@ if(isset($_GET['spiff']))
           <div class="artist"></div>
         </li>
       </ol>
-      <?php if($spiff) { ?>
+      <?php if($_spiff) { ?>
         <div id="loading">Loading Spiff...</div>
       <?php } else { ?>
       <div id="emptylist">
