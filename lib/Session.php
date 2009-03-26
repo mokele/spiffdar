@@ -9,12 +9,14 @@ class Session
     private $id;
     private $encoded;
     private $identity;
+    private $isNew = true;
     
     public function __construct()
     {
         $valid = false;
         if(isset($_COOKIE['SID']) && $this->genEncoded($_COOKIE['SID']) == $_COOKIE['ENC'])
         {
+            $this->isNew = false;
             $this->id = $_COOKIE['SID'];
             $this->encoded = $_COOKIE['ENC'];
         }
@@ -30,6 +32,10 @@ class Session
             setcookie('SID', $this->id, $expire, $path, $domain);
             setcookie('ENC', $this->encoded, $expire, $path, $domain);
         }
+    }
+    public function isNew()
+    {
+        return $this->isNew;
     }
     private function genEncoded($id)
     {

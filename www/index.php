@@ -5,22 +5,28 @@ ini_set('include_path', ini_get('include_path') . ':../lib');
 require_once 'exceptions/UnauthorizedException.php';
 require_once 'exceptions/DBQueryException.php';
 require_once 'Spiff.php';
+require_once 'SpiffList.php';
 require_once 'Identity.php';
 require_once 'Session.php';
 
 require_once '../etc/private_key.php';
 
+$dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
 $session = new Session();
 
-function escape($str)
+$spiffList = new SpiffList($session->isNew ? null : $session);
+
+function escape($str, $nl = true)
 {
-  return addcslashes(htmlspecialchars($str, ENT_COMPAT, 'UTF-8'), "\n");
+    $str = htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
+    return $nl
+        ? addcslashes($str, "\n")
+        : $str;
 }
 
 $port = $_SERVER['SERVER_PORT'];
 $host = $_SERVER['HTTP_HOST'];
 $site = 'http://' . $host . ($port==80?'':":$port") . '/';
-
 
 ?><!DOCTYPE html 
 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
@@ -37,32 +43,35 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 <?php
 //////////////////////////////////
 // super simple for now
-$spiff = false;
+$_spiff = false;
 if(isset($_GET['spiff']))
 {
-    $dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
 
-    $spiff = new Spiff();
+    $_spiff = new Spiff();
     $loaded = false;
     if(is_numeric($_GET['spiff']))
     {
-        $spiff->load($_GET['spiff']);
+        $_spiff->load($_GET['spiff']);
         $loaded = true;
     }
     elseif(preg_match('/^http/', $_GET['spiff']))
     {
-        $spiff->loadFromURL($_GET['spiff'], $session);
+        $_spiff->loadFromURL($_GET['spiff'], $session);
         $loaded = true;
     }
     if($loaded)
     {
-        $title = $spiff->title;
-        $annotation = $spiff->annotation;
+        if($spiffList->add($_spiff))
+        {
+            $spiffList->save($session);
+        }
+        $title = $_spiff->title;
+        $annotation = $_spiff->annotation;
         echo 'spiffdar.setTitle("'.escape($title).'");';
         echo "\n";
         echo 'spiffdar.setAnnotation("'.escape($annotation).'");';
         echo "\n";
-        foreach($spiff->trackList as $track)
+        foreach($_spiff->trackList as $track)
         {
             echo 'spiffdar.add_track("'.escape($track['creator']).'", "'.escape($track['track']).'")';
             echo "\n";
@@ -90,7 +99,10 @@ if(isset($_GET['spiff']))
   <tr>
     <td id="side">
       <ul id="lists">
-        <li><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Test Playlist</span></a></li>
+        <?php foreach($spiffList->spiffs as $spiff) { ?>
+            <li<?php if($_spiff && $_spiff->id==$spiff->id) { ?> class="selected"<?php } ?>><a href="<?php echo $spiff->getURL(); ?>" title="<?php echo escape($spiff->title); ?><?php if($spiff->annotation) echo ' | '; ?><?php echo escape($spiff->annotation, false); ?>"><span><?php echo escape($spiff->title); ?></span></a></li>
+        <?php } ?>
+        <li style="margin-top: 15px"><a href="?spiff=<?php echo urlencode('http://ws.audioscrobbler.com/2.0/?method=playlist.fetch&raw=true&playlistURL=lastfm://playlist/2986550&api_key=b25b959554ed76058ac220b7b2e0a026'); ?>"><span>Test Playlist</span></a></li>
         <?php /*><li><a href="?spiff=<?php echo urlencode($site . 'static/the-way-I-do.xspf'); ?>">Embrace - The Way I Do</a></li>
         <li><a href="?spiff=<?php echo urlencode($site . 'static/hey-everyone.xspf'); ?>">Dananananaykroyd - Hey Everyone!</a></li>
         */ ?>

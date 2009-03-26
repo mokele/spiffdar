@@ -20,8 +20,12 @@ class Spiff
 
     private $loaded = false;
     
-    public function __construct()
+    public function __construct($id = null)
     {
+        if($id)
+        {
+            $this->load($id);
+        }
     }
     
     /**
@@ -49,8 +53,8 @@ class Spiff
         $this->derived_from = $row['derived_from'];
         $this->url = $row['url'];
         $this->session_id = $row['session_id'];
-        $this->setTitle($json['title']);
-        $this->setAnnotation($json['annotation']);
+        $this->setTitle($row['title']);
+        $this->setAnnotation($row['annotation']);
         $json = json_decode($row['json'], true);
         if($json['version'] != self::VERSION)
         {
@@ -181,6 +185,11 @@ class Spiff
         $this->derived_from = $this->id;
         $this->id = null;
         $this->url = null;
+    }
+    
+    public function getURL()
+    {
+        return '/?spiff=' . $this->id;
     }
 }
 
