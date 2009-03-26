@@ -1,5 +1,25 @@
 <?php
 
+ini_set('include_path', ini_get('include_path') . ':../lib');
+
+require_once 'exceptions/UnauthorizedException.php';
+require_once 'exceptions/DBQueryException.php';
+require_once 'Spiff.php';
+require_once 'Identity.php';
+require_once 'Session.php';
+
+$dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
+
+$session = new Session();
+$identity = new Identity(1);
+$session->save($identity);
+
+$spiff = new Spiff();
+$spiff->save($session);
+
+
+
+
 function escape($str)
 {
   return addcslashes(htmlspecialchars($str, ENT_COMPAT, 'UTF-8'), "\n");
