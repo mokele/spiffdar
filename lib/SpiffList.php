@@ -46,7 +46,7 @@ class SpiffList
     
     public function add(Spiff $spiff)
     {
-        if(isset($this->spiffs[$spiff->id]))
+        if(!$spiff->id || isset($this->spiffs[$spiff->id]))
         {
             return false;
         }
