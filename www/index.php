@@ -93,15 +93,14 @@ if(isset($_GET['spiff']))
 
 <h1><a href="/" class="spiffdar"><span class="spiff">Spiff</span>dar<!--där--></a></h1>
 <div id="playdar_stat">Detecting Playdar</div>
-<?php if(!$_spiff) { ?>
-<form id="add">
+
+<form id="add"<?php if($_spiff) { ?> style="display:none;"<?php } ?>>
   <label for="artist" id="artist_label">Artist</label>
   <input type="text" id="artist" name="artist" value="" />
   <label for="track" id="track_label">Track</label>
   <input type="text" id="track" name="track" value="" />
   <input type="submit" value="Add" />
 </form>
-<?php } ?>
 <table id="container" width="100%" height="100%">
   <tr>
     <td id="side">
