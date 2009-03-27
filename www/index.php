@@ -40,13 +40,11 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Spiffdar | Playlists for Playdar</title>
-<script type="text/javascript" src="/static/deps/prototype.js"></script>
-<script type="text/javascript" src="/static/deps/playdar.js"></script>
-<script type="text/javascript" src="/static/deps/soundmanager2-nodebug-jsmin.js"></script>
-<script type="text/javascript" src="/static/spiffdar.js"></script>
-<link rel="stylesheet" href="/static/main.css" type="text/css" />
+<?php include 'inc/head.php'; ?>
 <script type="text/javascript">
+
+spiffdar = new Spiffdar(playdar);
+
 <?php
 //////////////////////////////////
 // super simple for now
@@ -91,8 +89,7 @@ if(isset($_GET['spiff']))
 </head>
 <body>
 
-<h1><a href="/" class="spiffdar"><span class="spiff">Spiff</span>dar<!--där--></a></h1>
-<div id="playdar_stat">Detecting Playdar</div>
+<?php include 'inc/header.php'; ?>
 
 <form id="add"<?php if($_spiff) { ?> style="display:none;"<?php } ?>>
   <label for="artist" id="artist_label">Artist</label>

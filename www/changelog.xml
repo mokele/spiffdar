@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+  <title>Spiffdar Change Log</title>
+  <link>http://spiffdar.org/changelog.php</link>
+  <description></description>
+  <language>en-us</language>
+  <lastBuildDate>Mon, 27 Mar 2009 18:30:00 +0000</lastBuildDate>
+  
+  <item>
+    <link>http://spiffdar.org/changelog.php#20080327T1835</link>
+    <guid>http://spiffdar.org/changelog.php#20080327T1835</guid>
+    <pubDate>Fri, 27 Mar 2009 18:35:00 +0000</pubDate>
+    <title>Added about and change log pages</title>
+    <description><![CDATA[
+      You can now read a brief explanation of Spiffdar and info about how to help contribute on the <a href="http://spiffdar.org/about.php">about</a> page, as well as being able to keep up with what's happening with the live Spiffdar on this <a href="http://spiffdar.org/changelog.php">change log</a> page/feed that you're reading this very second.
+    ]]></description>
+  </item>
+  <item>
+    <link>http://spiffdar.org/changelog.php#20080326T2209</link>
+    <guid>http://spiffdar.org/changelog.php#20080326T2209</guid>
+    <pubDate>Thu, 26 Mar 2009 22:09:00 +0000</pubDate>
+    <title>Session Based List Saving</title>
+    <description><![CDATA[
+      When you view a list in Spiffdar now it'll get pinned to the top left of the page above the hard-coded lists.  This is the first step towards persistence and editing of lists that's planned.  If you want to keep the lists you've added then just make sure not to delete your cookies or else the session that Spiffdar gives you will get lost and you'll not be able to retrieve the lists you've added.  At a later date when Spiffdar forces you to login (e.g. via OpenID) then we can save your lists permanently.
+    ]]></description>
+  </item>
+</channel>
+</rss>

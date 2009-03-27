@@ -18,6 +18,7 @@ var Spiffdar = Class.create({
     playing_qid: null,
     initialize: function(playdar) {
         document.observe('dom:loaded', function() {
+            $('playdar_stat').show();
             this.list = $('list');
             this.addform = $('add');
             this.playdar = playdar;
@@ -260,5 +261,4 @@ var SpiffdarTrack = Class.create({
     }
 });
 
-spiffdar = new Spiffdar(playdar);
     
