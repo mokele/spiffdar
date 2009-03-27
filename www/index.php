@@ -11,6 +11,17 @@ require_once 'Session.php';
 
 require_once '../etc/private_key.php';
 
+$port = $_SERVER['SERVER_PORT'];
+$host = $_SERVER['HTTP_HOST'];
+if($host=='www.spiffdar.org')
+{
+    header("Status: 301 Moved Permanently");
+    header("Location: http://spiffdar.org" . $_SERVER['REQUEST_URI']);
+    exit;
+}
+$site = 'http://' . $host . ($port==80?'':":$port") . '/';
+
+//we only allow local connections to this db
 $dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
 $session = new Session();
 
@@ -23,10 +34,6 @@ function escape($str, $nl = true)
         ? addcslashes($str, "\n")
         : $str;
 }
-
-$port = $_SERVER['SERVER_PORT'];
-$host = $_SERVER['HTTP_HOST'];
-$site = 'http://' . $host . ($port==80?'':":$port") . '/';
 
 ?><!DOCTYPE html 
 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 

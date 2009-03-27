@@ -43,6 +43,10 @@ class Spiff
         if($result && $row = pg_fetch_assoc($result))
         {
             $this->loadRow($row);
+            if($this->url)
+            {
+                $this->fetchFromURL($this->url);
+            }
         }
         $this->loaded = true;
         return $this;
@@ -82,12 +86,20 @@ class Spiff
             $exists = true;
         }
         $this->url = $url;
-        
+        $this->fetchFromURL($url);
+        if(!$exists)
+        {
+            $this->save($session);
+        }
+        $this->loaded = true;
+        return $this;
+    }
+    private function fetchFromURL($url)
+    {
         $contents = file_get_contents($url);
         if($contents)
         {
             $xml = new SimpleXMLElement($contents);
-            $shifting = array();
             $this->setTitle((string)$xml->title);
             $this->setAnnotation((string)$xml->annotation);
             $tracks = array();
@@ -100,16 +112,6 @@ class Spiff
             }
             $this->setTrackList($tracks);
         }
-        else
-        {
-            //load tracks and data from db
-        }
-        if(!$exists)
-        {
-            $this->save($session);
-        }
-        $this->loaded = true;
-        return $this;
     }
     public function __get($var)
     {
