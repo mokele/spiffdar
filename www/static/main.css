@@ -97,7 +97,7 @@ ul#lists li a {
     padding:2px 4px;
 }
 ul#lists li a span {
-    height: 12px;
+    height: 14px;
     vertical-align: middle;
     display: block;
     overflow: hidden;
@@ -183,7 +183,7 @@ ol#list li .artist {
 ol#list li .time {
     float: right;
     font-size: 20px;
-    margin-top: -20px;
+    margin-top: -26px;
 }
 
 table#list {
