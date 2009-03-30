@@ -97,6 +97,7 @@ if(isset($_GET['spiff']))
   <label for="track" id="track_label">Track</label>
   <input type="text" id="track" name="track" value="" />
   <input type="submit" value="Add" />
+  <input id="save" type="submit" value="Save" />
 </form>
 <table id="container" width="100%" height="100%">
   <tr>

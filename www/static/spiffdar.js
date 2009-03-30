@@ -21,8 +21,10 @@ var Spiffdar = Class.create({
             $('playdar_stat').show();
             this.list = $('list');
             this.addform = $('add');
+            this.savebutton = $('save');
             this.playdar = playdar;
             this.addform.observe('submit', this.add_callback.bind(this));
+            this.savebutton.observe('click', this.save_callback.bind(this));
             this.playdar.register_results_handler(
                 this.results_handler.bind(this)
             );
@@ -56,6 +58,34 @@ var Spiffdar = Class.create({
         $('track').value = '';
         $('artist').focus();
         this.add_track(artist, track);
+    },
+    save_callback: function(event) {
+        event.stop();
+        var serialized = this.serialize();
+        if(!serialized) return;
+        new Ajax.Request('/save.php', {
+            method: 'post',
+            parameters: {
+                spiff: Object.toJSON(serialized)
+            }
+        });
+    },
+    serialize: function() {
+        var title = prompt('Give a name to your new playlist', '');
+        if(!title) return;
+        var serialized = {
+            title: title,
+            trackList: []
+        };
+        this.list.select('li').each(function(li) {
+            if(li.id=="listitem_template") return;
+            var item = {
+                track: li.down('.track').innerHTML.unescapeHTML(),
+                creator: li.down('.artist').innerHTML.unescapeHTML()
+            };
+            serialized.trackList.push(item);
+        });
+        return serialized;
     },
     delay_loaded: function(func) {
         if(this.loaded) {
