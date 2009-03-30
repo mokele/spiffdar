@@ -67,6 +67,9 @@ var Spiffdar = Class.create({
             method: 'post',
             parameters: {
                 spiff: Object.toJSON(serialized)
+            },
+            onComplete: function(transport) {
+                window.location.href = transport.responseText;
             }
         });
     },

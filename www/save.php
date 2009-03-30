@@ -34,5 +34,6 @@ $spiff->setTrackList($spiffData['trackList']);
 $spiff->save($session);
 $spiffList->add($spiff);
 $spiffList->save($session);
+echo $spiff->getURL();
 
 ?>
