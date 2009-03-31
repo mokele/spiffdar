@@ -14,6 +14,8 @@ var Spiffdar = Class.create({
     tracks: $H({}),
     loaded: false,
     delayed_loading: [],
+    auth: false,
+    delayed_auth: [],
     playing_sid: null,
     playing_qid: null,
     initialize: function(playdar) {
@@ -40,6 +42,14 @@ var Spiffdar = Class.create({
                 this.delayed_loading.each(function(func) {
                     func();
                 });
+                this.delayed_loading = [];
+            }.bind(this));
+            this.playdar.register_handler('auth', function() {
+                this.auth = true;
+                this.delayed_auth.each(function(func) {
+                    func();
+                });
+                this.delayed_auth = [];
             }.bind(this));
         }.bind(this));
     },
@@ -97,6 +107,13 @@ var Spiffdar = Class.create({
             this.delayed_loading.push(func);
         }
     },
+    delay_auth: function(func) {
+        if(this.auth) {
+            func();
+        } else {
+            this.delayed_auth.push(func);
+        }
+    },
     get_track: function(qid) {
         if(qid.indexOf('qid_')==0) {
             //also allow the id of the element
@@ -117,7 +134,9 @@ var Spiffdar = Class.create({
             var row = this.new_row(qid, artist, track);
             var spiffTrack = new SpiffdarTrack(qid, row, this);
             this.tracks.set(qid, spiffTrack);
-            this.resolve(spiffTrack);
+            this.delay_auth(function() {
+                this.resolve(spiffTrack);
+            }.bind(this));
             return spiffTrack;
         }.bind(this));
     },
