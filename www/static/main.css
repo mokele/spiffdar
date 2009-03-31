@@ -91,7 +91,6 @@ ul#lists li a {
     color: #444;
     text-decoration: none;
     background: #ddd;
-    -moz-border-radius: 5px;
     font-size: 12px;
     line-height: 12px;
     padding:2px 4px;
@@ -108,7 +107,6 @@ ul#lists li a:hover {
 ul#lists li.selected a {
     background: green;
     color: white;
-    -moz-border-radius: 0;
 }
 
 
@@ -138,10 +136,7 @@ div#emptylist p {
 }
 /** LIST **/
 ol#list {
-    padding:0;
-    margin:0;
-    display: block;
-    list-style-position: inside;
+    margin: 0;
     font-size: 20px;
 }
 ol#list li#listitem_template {
@@ -149,8 +144,8 @@ ol#list li#listitem_template {
     visibility: hidden;
 }
 ol#list li {
-    padding:5px;
     margin:0;
+    padding: 0px 5px 2px 5px;
     clear: both;
 }
 ol#list li.resolved {
@@ -165,25 +160,39 @@ ol#list li.hover {
 }
 ol#list li.playing {
     background: green;
+}
+ol#list li.playing .track,
+ol#list li.playing .artist,
+ol#list li.playing .time {
     color: white;
 }
 ol#list li.paused {
-    /*background: blue;*/
 }
 ol#list li .track {
-    font-size: 20px;
-    display: inline;
-    margin-left: 10px;
+    font-size: 16px;
+    line-height: 18px;
 }
 ol#list li .artist {
-    display: inline;
     margin-left: 3px;
-    font-size: 14px;
+    font-size: 12px;
 }
 ol#list li .time {
     float: right;
-    font-size: 20px;
-    margin-top: -26px;
+    padding: 5px 0 0 0;
+    font-size: 16px;
+}
+ol#list li .sourceLabel,
+ol#list li .source {
+    font-size: 10px;
+    color: #333;
+}
+ol#list li.playing .sourceLabel,
+ol#list li.playing .source {
+    color: rgb(203, 218, 177);
+}
+ol#list li div.resolvedInfo {
+    margin: -10px 0 0 0;
+    padding: 0;
 }
 
 table#list {

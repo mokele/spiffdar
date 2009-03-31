@@ -127,9 +127,15 @@ if(isset($_GET['spiff']))
     </td>
     <td id="main"><ol id="list">
         <li id="listitem_template">
-          <div class="time"></div>
-          <div class="track"></div>
-          <div class="artist"></div>
+            <div class="metaData">
+                <span class="time"></span>
+                <span class="track"></span>
+                <span class="artist"></span>
+            </div>
+            <div class="resolvedInfo">
+                <span class="sourceLabel">Source:</span>
+                <span class="source">None</span>
+            </div>
         </li>
       </ol>
       <?php if($_spiff) { ?>

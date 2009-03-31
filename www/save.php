@@ -24,7 +24,6 @@ $site = 'http://' . $host . ($port==80?'':":$port") . '/';
 //we only allow local connections to this db
 $dbconn = pg_pconnect("host=localhost port=5432 dbname=mokele user=mokele password=mokele");
 $session = new Session();
-
 $spiffList = new SpiffList($session->isNew ? null : $session);
 $spiffData = json_decode($_POST['spiff'], true);
 
