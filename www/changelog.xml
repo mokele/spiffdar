@@ -5,8 +5,16 @@
   <link>http://spiffdar.org/changelog.php</link>
   <description></description>
   <language>en-us</language>
-  <lastBuildDate>Mon, 27 Mar 2009 18:30:00 +0000</lastBuildDate>
-  
+  <lastBuildDate>Tue, 31 Mar 2009 01:51:00 +0100</lastBuildDate>
+  <item>
+    <link>http://spiffdar.org/changelog.php#20080331T0151</link>
+    <guid>http://spiffdar.org/changelog.php#20080331T0151</guid>
+    <pubDate>Tue, 31 Mar 2009 01:51:00 +0100</pubDate>
+    <title>Saving brand new lists</title>
+    <description><![CDATA[
+      Brand new lists can not be saved by clicking the save button.  This was a quick addition so just threw it live.  It still needs the ability to edit exisiting lists and create copies of external spiffs to then edit.
+    ]]></description>
+  </item>
   <item>
     <link>http://spiffdar.org/changelog.php#20080327T1835</link>
     <guid>http://spiffdar.org/changelog.php#20080327T1835</guid>
