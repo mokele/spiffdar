@@ -252,20 +252,31 @@ var SpiffdarTrack = Class.create({
         this.add_resolutions(response.results);
     },
     add_resolutions: function(results) {
-        this.increment_source_count(results.size());
-        this.resolutions = this.resolutions.concat($A(results));
+        var diff = $A(results).select(function(item) {
+            return !this.resolutions.find(function(item2) {
+                return item.sid==item2.sid;
+            });
+        }.bind(this));
+        this.resolutions = this.resolutions.concat(diff);
+        if(diff.size() > 0) {
+            this.increment_source_count(diff.size());
+        }
     },
     increment_source_count: function(count) {
-        this.source_count = count;
+        var orig = this.source_count;
+        this.source_count += count;
         if(this.source_count > 1) {
             var sc = this.element.down('.sourceCount');
             sc.update('('+this.source_count+')');
-            sc.observe('click', this.callback_source_count.bind(this));
+            if(orig < 2) {
+                sc.observe('click', this.callback_source_count.bind(this));
+            }
         }
     },
     callback_source_count: function(event) {
         event.stop();
         //todo: don't regenerate this every time?
+        this.hide_resolutions();
         this.resolution_options = new Element('ul', { 'class': 'resolutions' });
         this.resolutions.each(function(result) {
             var track = new Element('span', { 'class': 'track' }).update(result.track);

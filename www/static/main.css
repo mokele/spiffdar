@@ -216,6 +216,7 @@ ul.resolutions li {
 ul.resolutions li a {
     padding: 2px;
     margin: 0;
+    display: block;
 }
 ul.resolutions li .track {
     font-weight: bold;
