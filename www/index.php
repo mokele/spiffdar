@@ -56,7 +56,7 @@ if(isset($_GET['spiff']))
     $loaded = false;
     if(is_numeric($_GET['spiff']))
     {
-        $_spiff->load($_GET['spiff']);
+        $_spiff->load($_GET['spiff'], true);
         $loaded = true;
     }
     elseif(preg_match('/^http/', $_GET['spiff']))

@@ -393,6 +393,7 @@ var SpiffdarTrack = Class.create({
         this.playing = true;
     },
     notification_streamfailure: function() {
+        if(!this.playing) return;//doesn't matter anymore!
         var nextResolution = null;
         var currentResolution = null;
         this.resolutions.each(function(r) {

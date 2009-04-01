@@ -20,18 +20,18 @@ class Spiff
 
     private $loaded = false;
     
-    public function __construct($id = null)
+    public function __construct($id = null, $refetch = false)
     {
         if($id)
         {
-            $this->load($id);
+            $this->load($id, $refetch);
         }
     }
     
     /**
      * fetches the list from the store
      */
-    public function load($id)
+    public function load($id, $refetch = false)
     {
         if($this->loaded) return;
         
@@ -39,11 +39,12 @@ class Spiff
         global $dbconn;
         $sql = 'SELECT * FROM spiff WHERE id = $1 LIMIT 1';
         $params = array($id);
+        
         $result = pg_query_params($dbconn, $sql, $params);
         if($result && $row = pg_fetch_assoc($result))
         {
             $this->loadRow($row);
-            if($this->url)
+            if($this->url && $refetch)
             {
                 $this->fetchFromURL($this->url);
             }
