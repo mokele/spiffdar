@@ -64,7 +64,7 @@ if(isset($_GET['spiff']))
         $_spiff->loadFromURL($_GET['spiff'], $session);
         $loaded = true;
     }
-    elseif($json = json_decode($_GET['spiff'], true))
+    elseif($json = json_decode($_REQUEST['spiff'], true))
     {
         $_spiff->setTrackList($json['trackList']);
         $loaded = true;
