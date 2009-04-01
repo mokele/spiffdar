@@ -361,22 +361,11 @@ var SpiffdarTrack = Class.create({
     register_stream: function(result) {
         this.sid = result.sid;
         this.sound = this.playdar.register_stream(result, {
-            onfinish: function () {
-                this.notification_paused();//todo: stopped
-                //this.spiffdar.play_next(this);
-                //todo: move into Spiffdar
-                this.spiffdar.playing_qid = null;
-                this.spiffdar.playing_sid = null;
-                
-                var nextElement = this.element.next();
-                if(!nextElement) return;//end of list
-                var next = this.spiffdar.get_track(nextElement.id);
-                this.playing = false;
-                this.spiffdar.play(next);
-            }.bind(this),
+            onfinish: this.notification_finished.bind(this),
             onpause: this.notification_paused.bind(this),
             onplay: this.notification_played.bind(this),
-            onresume: this.notification_played.bind(this)
+            onresume: this.notification_played.bind(this),
+            onstreamfailure: this.notification_streamfailure.bind(this)
         });
     },
     click_callback: function(event) {
@@ -400,7 +389,44 @@ var SpiffdarTrack = Class.create({
     notification_played: function() {
         this.element.removeClassName('paused');
         this.element.addClassName('playing');
+        this.element.removeClassName('streamfailure');
         this.playing = true;
+    },
+    notification_streamfailure: function() {
+        var nextResolution = null;
+        var currentResolution = null;
+        this.resolutions.each(function(r) {
+            if(r.sid == this.sid) {
+                currentResolution = r;
+            } else if(currentResolution && !nextResolution) {
+                nextResolution = r;
+            }
+        }.bind(this));
+        if(nextResolution) {
+            //next resolution
+            this.resolved(nextResolution, true);
+            this.spiffdar.play(this);
+        } else {
+            this.element.addClassName('streamfailure');
+            //the whileplaying event next gets hit again
+            //by soundmanager, so we need to remake it all :(
+            this.sound.destruct();
+            this.register_stream(currentResolution);
+            this.notification_finished();
+        }
+    },
+    notification_finished: function() {
+        this.notification_paused();//todo: stopped
+        //this.spiffdar.play_next(this);
+        //todo: move into Spiffdar
+        this.spiffdar.playing_qid = null;
+        this.spiffdar.playing_sid = null;
+        
+        var nextElement = this.element.next();
+        if(!nextElement) return;//end of list
+        var next = this.spiffdar.get_track(nextElement.id);
+        this.playing = false;
+        this.spiffdar.play(next);
     }
 });
 

@@ -181,6 +181,9 @@ ol#list li .time {
     float: right;
     font-size: 16px;
 }
+ol#list li.streamfailure {
+    color: red;
+}
 ol#list li .resolvedInfo {
     color: #333;
     font-size: 10px;
