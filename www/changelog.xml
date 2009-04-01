@@ -5,7 +5,17 @@
   <link>http://spiffdar.org/changelog.php</link>
   <description></description>
   <language>en-us</language>
-  <lastBuildDate>Wed, 01 Apr 2009 13:20:00 +0100</lastBuildDate>
+  <lastBuildDate>Wed, 01 Apr 2009 18:12:00 +0100</lastBuildDate>
+  
+  <item>
+    <link>http://spiffdar.org/changelog.php#20080401T1812</link>
+    <guid>http://spiffdar.org/changelog.php#20080401T1812</guid>
+    <pubDate>Wed, 01 Apr 2009 18:12:00 +0100</pubDate>
+    <title>Recovery and resolution source fallback on stream errors</title>
+    <description><![CDATA[
+      If you're using the Seeqpod python plugin for Playdar then you'll notice that some tracks fail to stream sometimes.  Well now Spiffdar will gracefully handle with that and skip onto either the next available resolved source for that track or onto the next track in the list.  It made more sense to put the stream error checking into playdar.js so committed that to my www.playdar.org fork and hopefully that finds it's way into the live playdar code.  It would have been great for this callback to be handled by SoundManager2, but couldn't find any way of doing that, so had to come up with the crude 4 second timeout. Might query Scott about that at some point.
+    ]]></description>
+  </item>
   
   <item>
     <link>http://spiffdar.org/changelog.php#20080401T1320</link>
