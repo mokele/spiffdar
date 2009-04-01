@@ -330,6 +330,7 @@ var SpiffdarTrack = Class.create({
             $(document.body).stopObserving('click', this.last_options_callback);
             this.last_options_callback = null;
         }
+        this.element.removeClassName('hover');
     },
     not_resolved: function() {
         if(this.resolved_callback) {
