@@ -182,18 +182,57 @@ ol#list li .time {
     padding: 5px 0 0 0;
     font-size: 16px;
 }
-ol#list li .sourceLabel,
-ol#list li .source {
-    font-size: 10px;
+ol#list li .resolvedInfo {
     color: #333;
+    font-size: 10px;
 }
+ol#list li .sourceLabel,
+ol#list li .source,
+ol#list li .sourceCount {
+}
+
 ol#list li.playing .sourceLabel,
-ol#list li.playing .source {
+ol#list li.playing .source,
+ol#list li.playing .sourceCount {
     color: rgb(203, 218, 177);
 }
 ol#list li div.resolvedInfo {
-    margin: -10px 0 0 0;
+    margin: 0 0 0 0;
     padding: 0;
+}
+ul.resolutions {
+    list-style: none;
+    margin:0 !important;
+    padding:0 !important;
+    border: 1px solid #C0C0C0;
+    position: absolute;
+    background: white;
+}
+ul.resolutions li {
+    margin:0 !important;
+    padding:0 !important;
+    clear: none !important;
+}
+ul.resolutions li a {
+    padding: 2px;
+    margin: 0;
+}
+ul.resolutions li .track {
+    font-weight: bold;
+}
+ul.resolutions li .track,
+ul.resolutions li .artist {
+    font-size: 10px !important;
+    color: black !important;
+}
+ul.resolutions li.selected a {
+    text-decoration: underline !important;
+}
+ul.resolutions li .artist {
+    padding: 0 3px;
+}
+ul.resolutions li a:hover {
+    background: rgb(203, 218, 177);
 }
 
 table#list {

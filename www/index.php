@@ -135,6 +135,7 @@ if(isset($_GET['spiff']))
             <div class="resolvedInfo">
                 <span class="sourceLabel">Source:</span>
                 <span class="source">None</span>
+                <span class="sourceCount"></span>
             </div>
         </li>
       </ol>

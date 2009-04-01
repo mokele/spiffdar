@@ -198,25 +198,19 @@ var Spiffdar = Class.create({
             this.play(next);
             return;
         }
-        
-        if(track.sid != this.playing_sid && this.playing_sid) {
+        if(track.qid != this.playing_qid && this.playing_qid) {
+            //note change to sid here
             this.playdar.play_stream(this.playing_sid);
         }
         
-        this.playdar.play_stream(track.sid);
-        if(this.playing_sid==track.sid) {
+        if(this.playing_qid && this.playing_qid==track.qid || !track.isResolved) {
             this.playing_sid = null;
             this.playing_qid = null;
         } else {
-            if(track.isResolved) {
-                this.playing_sid = track.sid;
-                this.playing_qid = track.qid;
-            } else {
-                //terminating statement
-                this.playing_sid = null;
-                this.playing_qid = null;
-            }
+            this.playing_sid = track.sid;
+            this.playing_qid = track.qid;
         }
+        this.playdar.play_stream(track.sid);//does play and pause atm
     },
     play_next: function(track) {
         var keys = this.tracks.keys();
@@ -229,8 +223,10 @@ var Spiffdar = Class.create({
 });
 var SpiffdarTrack = Class.create({
     playing: false,
-    resolved: false,
+    isResolved: false,
+    resolutions: $A([]),
     resolved_callback: null,
+    source_count: 0,
     initialize: function(qid, element, spiffdar) {
         this.element = element;
         this.qid = qid;
@@ -253,24 +249,106 @@ var SpiffdarTrack = Class.create({
                 this.not_resolved();
             }
         }
+        this.add_resolutions(response.results);
+    },
+    add_resolutions: function(results) {
+        this.increment_source_count(results.size());
+        this.resolutions = this.resolutions.concat($A(results));
+    },
+    increment_source_count: function(count) {
+        this.source_count = count;
+        if(this.source_count > 1) {
+            var sc = this.element.down('.sourceCount');
+            sc.update('('+this.source_count+')');
+            sc.observe('click', this.callback_source_count.bind(this));
+        }
+    },
+    callback_source_count: function(event) {
+        event.stop();
+        //todo: don't regenerate this every time?
+        this.resolution_options = new Element('ul', { 'class': 'resolutions' });
+        this.resolutions.each(function(result) {
+            var track = new Element('span', { 'class': 'track' }).update(result.track);
+            var artist = new Element('span', { 'class': 'artist' }).update(result.artist);
+            var sourceInfo = new Element('span').update(
+                Playdar.mmss(result.duration)
+                + ', Source: ' + result['source']
+                + ', ' + result.bitrate + 'kbps');
+            
+            var a = new Element('a', { 'id': 'sid_' + result.sid });
+            a.appendChild(track);
+            a.appendChild(artist);
+            a.appendChild(sourceInfo);
+            //todo: refactor into a source class
+            a.observe('click', this.change_source.bind(this));
+            var li = new Element('li', { 'class': result.sid==this.sid ? 'selected':'' });
+            li.appendChild(a)
+            this.resolution_options.appendChild(li);
+        }.bind(this));
+        this.element.down('.resolvedInfo').insert({bottom: this.resolution_options});
+        this.last_options_callback = this.hide_resolutions.bind(this);
+        $(document.body).observe('click', this.last_options_callback);
+        
+    },
+    change_source: function(event) {
+        event.stop();
+        var sid = event.findElement('a').id.substr(4);
+        var result = this.resolutions.find(function(r) {
+            return r.sid == sid;
+        });
+        var playing = this.playing;
+        //playdar does some other checks we don't want to kill
+        if(playing) {
+            this.spiffdar.play(this);//pause
+        }
+        //this kills playdar atm due to it's currently playing checks
+        //this.sound.destruct();
+        //this.register_stream(result);
+        this.resolved(result, true);
+        this.hide_resolutions();
+        if(playing) {
+            this.spiffdar.play(this);
+        }
+    },
+    hide_resolutions: function() {
+        if(this.resolution_options) {
+            this.resolution_options.remove();
+            this.resolution_options = null;
+        }
+        if(this.last_options_callback) {
+            $(document.body).stopObserving('click', this.last_options_callback);
+            this.last_options_callback = null;
+        }
     },
     not_resolved: function() {
         if(this.resolved_callback) {
             this.resolved_callback();
         }
     },
-    resolved: function(result) {
+    resolved: function(result, nobind) {
+        //when we resolve other times against other results
+        //we don't want to rebind these events, todo: move this 
+        //somewhere else?
+        if(!nobind) {
+            this.element.observe('click', this.click_callback.bind(this));
+            this.element.observe('mouseover', this.mouseover_callback.bind(this));
+            this.element.observe('mouseout', this.mouseout_callback.bind(this));
+        }
         this.isResolved = true;
         this.element.addClassName('resolved');
-        this.element.observe('click', this.click_callback.bind(this));
-        this.element.observe('mouseover', this.mouseover_callback.bind(this));
-        this.element.observe('mouseout', this.mouseout_callback.bind(this));
         this.element.down('.time').update(Playdar.mmss(result.duration));
         this.element.down('.artist').update(result.artist);
         this.element.down('.track').update(result.track);
         this.element.down('.source').update(result['source']);
+        //todo: move to the point of playback instead of resolutions
+        this.register_stream(result);
+        if(this.resolved_callback) {
+            this.resolved_callback();
+        }
+    },
+    register_stream: function(result) {
         this.sid = result.sid;
-        var sound = this.playdar.register_stream(result, {
+        this.sound = this.playdar.register_stream(result, {
             onfinish: function () {
                 this.notification_paused();//todo: stopped
                 //this.spiffdar.play_next(this);
@@ -281,19 +359,18 @@ var SpiffdarTrack = Class.create({
                 var nextElement = this.element.next();
                 if(!nextElement) return;//end of list
                 var next = this.spiffdar.get_track(nextElement.id);
+                this.playing = false;
                 this.spiffdar.play(next);
             }.bind(this),
             onpause: this.notification_paused.bind(this),
             onplay: this.notification_played.bind(this),
             onresume: this.notification_played.bind(this)
-        });        
-        if(this.resolved_callback) {
-            this.resolved_callback();
-        }
+        });
     },
     click_callback: function(event) {
         event.stop();
         this.spiffdar.play(this);
+        this.hide_resolutions();
     },
     mouseover_callback: function(event) {
         event.stop();
@@ -306,10 +383,12 @@ var SpiffdarTrack = Class.create({
     notification_paused: function() {
         this.element.removeClassName('playing');
         this.element.addClassName('paused');
+        this.playing = false;
     },
     notification_played: function() {
         this.element.removeClassName('paused');
         this.element.addClassName('playing');
+        this.playing = true;
     }
 });
 
