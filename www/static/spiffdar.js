@@ -393,7 +393,7 @@ var SpiffdarTrack = Class.create({
         this.playing = true;
     },
     notification_streamfailure: function() {
-        if(!this.playing) return;//doesn't matter anymore!
+        var playing = this.playing;
         var nextResolution = null;
         var currentResolution = null;
         this.resolutions.each(function(r) {
@@ -403,7 +403,7 @@ var SpiffdarTrack = Class.create({
                 nextResolution = r;
             }
         }.bind(this));
-        if(nextResolution) {
+        if(nextResolution && playing) {
             //next resolution
             this.resolved(nextResolution, true);
             this.spiffdar.play(this);
@@ -413,7 +413,9 @@ var SpiffdarTrack = Class.create({
             //by soundmanager, so we need to remake it all :(
             this.sound.destruct();
             this.register_stream(currentResolution);
-            this.notification_finished();
+            if(playing) {
+                this.notification_finished();
+            }
         }
     },
     notification_finished: function() {
