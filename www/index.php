@@ -64,9 +64,14 @@ if(isset($_GET['spiff']))
         $_spiff->loadFromURL($_GET['spiff'], $session);
         $loaded = true;
     }
+    elseif($json = json_decode($_GET['spiff'], true))
+    {
+        $_spiff->setTrackList($json['trackList']);
+        $loaded = true;
+    }
     if($loaded)
     {
-        if($spiffList->add($_spiff))
+        if($_spiff->id && $spiffList->add($_spiff))
         {
             $spiffList->save($session);
         }
@@ -91,7 +96,7 @@ if(isset($_GET['spiff']))
 
 <?php include 'inc/header.php'; ?>
 
-<form id="add"<?php if($_spiff) { ?> style="display:none;"<?php } ?>>
+<form id="add"<?php if($_spiff && $_spiff->id) { ?> style="display:none;"<?php } ?>>
   <label for="artist" id="artist_label">Artist</label>
   <input type="text" id="artist" name="artist" value="" />
   <label for="track" id="track_label">Track</label>
