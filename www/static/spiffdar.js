@@ -1,7 +1,7 @@
 var auth_details = {
     name: "Spiffdar | Playlists for Playdar",
-    website: "http://spiffdar.org/",
-    receiverurl: "http://spiffdar.org/playdarauth.html",
+    website: window.location,
+    receiverurl: window.location + "/playdarauth.html",
 };
 var playdar = new Playdar(auth_details);
 soundManager.url = '/static/deps/soundmanager2_flash9.swf';
