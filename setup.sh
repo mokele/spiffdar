@@ -2,8 +2,10 @@
 
 # A quick script to load the dependancies required for Spiffdar
 
+mkdir -p www/static/deps
+
 echo "Downloading Playday.js..."
-curl -s "http://playdar.org/static/playdar.js" > www/static/playdar.js
+curl -s "http://www.playdar.org/static/playdar.js" > www/static/deps/playdar.js
 echo "Done";
 echo "";
 
@@ -12,8 +14,8 @@ curl -s "http://www.schillmania.com/projects/soundmanager2/download/soundmanager
 
 echo "Installing..."
 unzip -q soundmanager 
-mv soundmanagerv294a-20090206/swf/soundmanager2_flash9.swf www/static
-mv soundmanagerv294a-20090206/script/soundmanager2-nodebug-jsmin.js www/static
+mv soundmanagerv294a-20090206/swf/soundmanager2_flash9.swf www/static/deps
+mv soundmanagerv294a-20090206/script/soundmanager2-nodebug-jsmin.js www/static/deps
 
 rm soundmanager
 rm -rf soundmanagerv294a-20090206
