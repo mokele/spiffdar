@@ -200,7 +200,7 @@ var Spiffdar = Class.create({
         }
         if(track.qid != this.playing_qid && this.playing_qid) {
             //note change to sid here
-            this.playdar.Player.play_stream(this.playing_sid);
+            this.playdar.player.play_stream(this.playing_sid);
         }
         
         if(this.playing_qid && this.playing_qid==track.qid || !track.isResolved) {
