@@ -7,7 +7,7 @@
 <body>
     <script>
     if (window.opener) {
-        window.opener.Playdar.last.auth_callback(window.location.hash.replace('#', ''));
+        window.opener.Playdar.client.auth_callback(window.location.hash.replace('#', ''));
     }
     </script>
 </body>

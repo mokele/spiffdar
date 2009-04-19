@@ -27,7 +27,7 @@ var Spiffdar = Class.create({
             this.playdar = playdar;
             this.addform.observe('submit', this.add_callback.bind(this));
             this.savebutton.observe('click', this.save_callback.bind(this));
-            this.playdar.register_listeners({
+            this.playdar.client.register_listeners({
                 onResults: this.results_handler.bind(this),
                 onStat: function(detected) {
                     var text;
@@ -200,7 +200,7 @@ var Spiffdar = Class.create({
         }
         if(track.qid != this.playing_qid && this.playing_qid) {
             //note change to sid here
-            this.playdar.play_stream(this.playing_sid);
+            this.playdar.Player.play_stream(this.playing_sid);
         }
         
         if(this.playing_qid && this.playing_qid==track.qid || !track.isResolved) {
@@ -210,7 +210,7 @@ var Spiffdar = Class.create({
             this.playing_sid = track.sid;
             this.playing_qid = track.qid;
         }
-        this.playdar.play_stream(track.sid);//does play and pause atm
+        this.playdar.player.play_stream(track.sid);//does play and pause atm
     },
     play_next: function(track) {
         var keys = this.tracks.keys();
@@ -238,7 +238,7 @@ var SpiffdarTrack = Class.create({
     },
     resolve: function(callback) {
         this.resolved_callback = callback;
-        this.spiffdar.playdar.resolve(this.artist, '', this.track, this.qid);
+        this.spiffdar.playdar.client.resolve(this.artist, '', this.track, this.qid);
     },
     results_handler: function(response, final_answer) {
         if(final_answer) {
@@ -282,7 +282,7 @@ var SpiffdarTrack = Class.create({
             var track = new Element('span', { 'class': 'track' }).update(result.track);
             var artist = new Element('span', { 'class': 'artist' }).update(result.artist);
             var sourceInfo = new Element('span').update(
-                Playdar.mmss(result.duration)
+                Playdar.Util.mmss(result.duration)
                 + ', Source: ' + result['source']
                 + ', ' + result.bitrate + 'kbps');
             
@@ -348,7 +348,7 @@ var SpiffdarTrack = Class.create({
         }
         this.isResolved = true;
         this.element.addClassName('resolved');
-        this.element.down('.time').update(Playdar.mmss(result.duration));
+        this.element.down('.time').update(Playdar.Util.mmss(result.duration));
         this.element.down('.artist').update(result.artist);
         this.element.down('.track').update(result.track);
         this.element.down('.source').update(result['source']);
@@ -360,7 +360,7 @@ var SpiffdarTrack = Class.create({
     },
     register_stream: function(result) {
         this.sid = result.sid;
-        this.sound = this.playdar.register_stream(result, {
+        this.sound = this.playdar.player.register_stream(result, {
             onfinish: this.notification_finished.bind(this),
             onpause: this.notification_paused.bind(this),
             onplay: this.notification_played.bind(this),
