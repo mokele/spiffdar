@@ -3,12 +3,12 @@ var auth_details = {
     website: window.location,
     receiverurl: window.location + "/playdarauth.html",
 };
-var playdar = new Playdar(auth_details);
+Playdar.setup(auth_details);
 soundManager.url = '/static/deps/soundmanager2_flash9.swf';
 soundManager.flashVersion = 9;
 soundManager.onload = function() {
-    playdar.soundmanager = soundManager;
-    playdar.init();
+    Playdar.setup_player(soundManager);
+    Playdar.client.init();
 }
 var Spiffdar = Class.create({
     tracks: $H({}),
@@ -27,30 +27,30 @@ var Spiffdar = Class.create({
             this.playdar = playdar;
             this.addform.observe('submit', this.add_callback.bind(this));
             this.savebutton.observe('click', this.save_callback.bind(this));
-            this.playdar.register_results_handler(
-                this.results_handler.bind(this)
-            );
-            this.playdar.register_handler('stat', function(detected) {
-                var text;
-                if (detected) {
-                    text = "<b style='color:green;'>Playdar ready</b>";
-                } else {
-                    text = "<b style='color:red;'>Playdar unavailable</b><br/>You need Playdar, the music content resolver, installed and running. See <a href=\"http://www.playdar.org/\">www.playdar.org</a>.";
-                }
-                $('playdar_stat').innerHTML = text;
-                this.loaded = true;
-                this.delayed_loading.each(function(func) {
-                    func();
-                });
-                this.delayed_loading = [];
-            }.bind(this));
-            this.playdar.register_handler('auth', function() {
-                this.auth = true;
-                this.delayed_auth.each(function(func) {
-                    func();
-                });
-                this.delayed_auth = [];
-            }.bind(this));
+            this.playdar.register_listeners({
+                onResults: this.results_handler.bind(this),
+                onStat: function(detected) {
+                    var text;
+                    if (detected) {
+                        text = "<b style='color:green;'>Playdar ready</b>";
+                    } else {
+                        text = "<b style='color:red;'>Playdar unavailable</b><br/>You need Playdar, the music content resolver, installed and running. See <a href=\"http://www.playdar.org/\">www.playdar.org</a>.";
+                    }
+                    $('playdar_stat').innerHTML = text;
+                    this.loaded = true;
+                    this.delayed_loading.each(function(func) {
+                        func();
+                    });
+                    this.delayed_loading = [];
+                }.bind(this),
+                onAuth: function() {
+                    this.auth = true;
+                    this.delayed_auth.each(function(func) {
+                        func();
+                    });
+                    this.delayed_auth = [];
+                }.bind(this)
+            });
         }.bind(this));
     },
     results_handler: function(response, final_answer) {
@@ -130,7 +130,7 @@ var Spiffdar = Class.create({
             if($('loading')) {
                 $('loading').hide();
             }
-            var qid = Playdar.generate_uuid();
+            var qid = Playdar.Util.generate_uuid(); 
             var row = this.new_row(qid, artist, track);
             var spiffTrack = new SpiffdarTrack(qid, row, this);
             this.tracks.set(qid, spiffTrack);
