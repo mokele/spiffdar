@@ -43,7 +43,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 <?php include 'inc/head.php'; ?>
 <script type="text/javascript">
 
-spiffdar = new Spiffdar(Playdar.client);
+spiffdar = new Spiffdar(Playdar);
 
 <?php
 //////////////////////////////////
